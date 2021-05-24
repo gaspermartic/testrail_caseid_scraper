@@ -5,8 +5,8 @@ After that you may run the scraper from the current folder:
 ```bash
 pipenv shell
 # get caseids of test cases in sections, specified in SECTIONS of caseid_spider.py
-scrapy crawl caseid_spider -O scraped-content/caseids.json 
+scrapy crawl caseid_spider -O scraped_content/caseids.json 
 # get caseids of all test cases
-scrapy crawl caseid_spider -O scraped-content/caseids.json -a all-sections=True
+scrapy crawl caseid_spider -O scraped_content/caseids.json -a all-sections=True
 ```
 The output will be placed in ```scraped-content/caseids.json```
