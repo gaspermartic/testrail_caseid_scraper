@@ -3,6 +3,6 @@ A simple scraper, based on [scrapy](https://docs.scrapy.org/en/latest/), which r
 
 ## Setup
 Before running the scraper, dependencies need to be installed using [pipenv](https://pypi.org/project/pipenv/):
-```
+```bash
 pipenv install
 ```
