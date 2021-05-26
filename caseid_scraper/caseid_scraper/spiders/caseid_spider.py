@@ -8,7 +8,19 @@ STATUS_STRINGS = [
 # TODO: static right now, add as command line parameter OR json/csv file?
 # all sections are scraped if the all-sections option is passed (-a all-sections=True)
 SECTIONS = [
-    'Multiple gateways'
+    # 'OpenSync Steering',
+    # 'Client Steering',
+    # 'Optimization',
+    # 'DFS',
+    # 'VSB',
+    # 'IPv6',
+    # 'M2U, IGMP Snooping and IGMP Proxy',
+    # 'IGMP',
+    # 'Networking',
+    # 'HomePass',
+    # 'Wired clients',
+    # 'Security',
+    # 'Platform',
 ]
 
 class CaseIdSpider(scrapy.Spider):
@@ -37,11 +49,11 @@ class CaseIdSpider(scrapy.Spider):
 
 
         result_str = ','.join(result)
+        print(f'\nNumber of scraped cases: {len(result)}\n')
         yield {'result': result_str}
     
     def get_all_caseids(self, response):
-        # we use set to prevent duplicates - but this messes up the order, so consider if this should be changed
-        result = set()
+        result = []
         
         # ids (strings) of all html elements <tr> which contain test case info
         tr_ids = response.xpath('//*/tr[contains(@class, "row odd") or contains(@class, "row even")]/@id').getall()
@@ -51,20 +63,20 @@ class CaseIdSpider(scrapy.Spider):
             # TODO: the smarter solution would be scraping the section's first row with column names (only needs to be done once)
             if any(s in columns for s in STATUS_STRINGS):
                 case_id = columns[0]
-                result.add(case_id)
+                result.append(case_id)
 
         return result
 
     def get_sections_caseids(self, response):
-        result = set()
+        result = []
 
         for section in SECTIONS:
-            result = result.union(self.get_section_caseids(response, section))
+            result += self.get_section_caseids(response, section)
 
         return result
 
     def get_section_caseids(self, response, section):
-        result = set()
+        result = []
         # id (string) of html element <div> which contains all <tr> of test cases in desired section
         # the section is a <span> which contains section text and classes 'title pull-left', cases are contained in its 2nd ancestor div
         section_id = response.xpath(f'//*/span[contains(text(), "{section}") and contains(@class, "title pull-left")]/ancestor::div[2]/@id').getall()[0]
@@ -74,7 +86,7 @@ class CaseIdSpider(scrapy.Spider):
             columns = response.xpath(f'//*/tr[@id="{tr_id}"]/td/a/text()').getall()
             if any(s in columns for s in STATUS_STRINGS):
                 case_id = columns[0]
-                result.add(case_id)
+                result.append(case_id)
         return result
 
 # TODO: add check if test is Automated

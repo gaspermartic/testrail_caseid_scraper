@@ -9,4 +9,4 @@ scrapy crawl caseid_spider -O scraped_content/caseids.json
 # get caseids of all test cases
 scrapy crawl caseid_spider -O scraped_content/caseids.json -a all-sections=True
 ```
-The output will be placed in ```scraped-content/caseids.json```
+The output will be placed in ```scraped_content/caseids.json```
