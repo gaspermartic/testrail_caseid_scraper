@@ -1,4 +1,6 @@
 import scrapy
+import pathlib
+
 
 SPIDER_NAME = 'caseid_spider'
 STATUS_STRINGS = [
@@ -30,11 +32,17 @@ class CaseIdSpider(scrapy.Spider):
         self.all_sections = False
         if getattr(self, 'all-sections', None) == 'True':
             self.all_sections = True
-
-        # TODO: static right now, add as command line parameter
+            
+        name = getattr(self, 'file-name', '')
+        if name == '':
+            print('====================')
+            print('\n WARNING: file path was not passed\n')
+            print('====================')
+            return
+            
         # TODO: add support for multiple urls (yield results with different names)
         urls = [
-            'file:///home/gasper/Downloads/htmls/FRV%20AUG%203.4.1-36%20-%20TestRail.html'
+            f'file://{str(pathlib.Path(__file__).parents[1] / "html_testrail_runs" / name)}'
         ]
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
